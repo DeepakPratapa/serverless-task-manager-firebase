@@ -1,0 +1,40 @@
+<div class="container">
+    <h1>Event Details</h1>
+    <form id="eventDetailsForm">
+        <div class="mb-3">
+            <label for="eventName" class="form-label">Event Name</label>
+            <input type="text" class="form-control" id="eventName" required readonly>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <input type="text" class="form-control" id="description" required>
+        </div>
+        <div class="mb-3">
+            <label for="attachment" class="form-label">Relevant Attachment</label>
+            <input type="file" class="form-control" id="attachment">
+        </div>
+        <div class="mb-3">
+            <label for="dueDate" class="form-label">Due Date</label>
+            <input type="date" class="form-control" id="dueDate" required>
+        </div>
+        <div class="mb-3">
+            <label for="notificationMethods" class="form-label">Notification Methods</label>
+            <select class="form-control" id="notificationMethods" required>
+            <option value="SMS">SMS</option>
+            <option value="Email">Email</option>
+            <option value="Both">Both</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="reminderIntervals" class="form-label">Reminder Intervals</label>
+            <select class="form-control" id="reminderIntervals" required>
+                <option value="6">6 hours</option>
+                <option value="24">24 hours (1 day)</option>
+                <option value="36">36 hours (3 days)</option>
+                <option value="168">168 hours (1 week)</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-outline-danger">Create</button>
+    </form>
+    <div id="message"></div>
+</div>

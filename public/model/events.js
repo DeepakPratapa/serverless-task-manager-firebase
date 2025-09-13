@@ -1,9 +1,9 @@
-export class ToDoItem {
+export class Events {
     constructor(data, docId) {
-        this.titleId = data.titleId;
+        this.categoryId = data.categoryId;
         this.uid = data.uid;
-        this.content = data.content;
         this.timestamp = data.timestamp;
+        this.eventName = data.eventName;
         this.docId = docId;
     }
 
@@ -13,10 +13,12 @@ export class ToDoItem {
 
     toFirestore() {
         return {
-            titleId: this.titleId,
-            content: this.content,
+            categoryId: this.categoryId,
             uid: this.uid,
             timestamp: this.timestamp,
+            eventName: this.eventName,
+            
+            
         };
     }
 }

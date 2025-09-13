@@ -1,16 +1,16 @@
 import { currentUser } from "../controller/firebase_auth.js";
 import { root } from "./elements.js";
 import { protectedView } from "./protected_view.js";
-import { 
-    onSUbmitCreateForm,
-    onClickExpandButton,
-    onKeydownNewIteminput,
-    onMouseOverItem,
-    onMouseOutItem, 
-    onKeyDownUpdateItem
-} from "../controller/home_controller.js";
-import { getToDoTitleList } from "../controller/firestore_controller.js";
+
+
+
+import { onSubmitCreateForm , onClickExpandCategory ,onKeydownNewIteminput, onKeyDownUpdateItem , onMouseOverItem , onMouseOutItem} from "../controller/home_controller.js";
+import { onClickEventDetails ,onClickEventUpdate} from "../controller/menueventhandlers.js";
+
+import {getCategoryTitleList } from "../controller/firestore_controller.js";
 import { DEV } from "../model/constant.js";
+
+
 
 export async function homePageView() {
     if (!currentUser) {
@@ -23,15 +23,15 @@ export async function homePageView() {
     divWrapper.innerHTML = await response.text();
     divWrapper.classList.add('m-4', 'p-4')
     const from=divWrapper.querySelector('form');
-    from.onsubmit=onSUbmitCreateForm;
+    from.onsubmit=onSubmitCreateForm;
    
     root.innerHTML = '';
     root.appendChild(divWrapper);
 
 
-    let toDoTitleList;
+    let CategoryTitleList;
     try{
-        toDoTitleList=await getToDoTitleList(currentUser.uid);
+        CategoryTitleList=await getCategoryTitleList(currentUser.uid);
     }catch(e){
         if(DEV) console.log('failed to get title list',e);
         alert('Failed to get title list:'+JSON.stringify(e));
@@ -39,66 +39,69 @@ export async function homePageView() {
     }
 
     const container=divWrapper.querySelector('#todo-container');
-    toDoTitleList.forEach(title=>{
-        container.appendChild(buildCard(title));
+    CategoryTitleList.forEach(categoryName=>{
+        container.appendChild(buildCard(categoryName));
     });
 
 }
 
-export function buildCard(todoTitle){
+export function buildCard(category){
     const div=document.createElement('div');
     div.classList.add('card','d-inline-block');
     div.style="width: 25rem;";
     div.innerHTML=`
-    <div id="${todoTitle.docId}" class="card-body">
+    <div id="${category.docId}" class="card-body">
          <button class="btn btn-outline-primary">+</button>
-         <span class="fs-3 card-title">${todoTitle.title}</span>
+         <span class="fs-3 card-title">${category.categoryName}</span>
          </div>
     `;
     const expandbutton=div.querySelector('button');
-    expandbutton.onclick=onClickExpandButton;
+    expandbutton.onclick=onClickExpandCategory;
     return div;
 
 }
 
-
-export function buildCardText(titleDocId,itemList){
+export function buildCardText(CategoryDocId,EventTitleList){
     const p=document.createElement('p');
     p.classList.add('card-text','d-block');
     const ul=document.createElement('ul');
     p.appendChild(ul);
 
-    if(itemList.length!=0){
-        itemList.forEach(item=>{
+    if(EventTitleList.length!=0){
+        EventTitleList.forEach(item=>{
            
-            ul.appendChild(createToDoItemElement(item));
+            ul.appendChild(createEventTitleElement(item));
         })
     }
 
-    const newItemInput=document.createElement('input');
-    newItemInput.size="40";
-    newItemInput.id="input"+titleDocId;
-    newItemInput.placeholder="Enter an item";
-    newItemInput.onkeydown=function(e){
-    onKeydownNewIteminput(e,titleDocId);
+    const newEventTitleInput=document.createElement('input');
+    newEventTitleInput.size="40";
+    newEventTitleInput.id="input"+CategoryDocId;
+    newEventTitleInput.placeholder="Enter an item";
+    newEventTitleInput.onkeydown=function(e){
+    onKeydownNewIteminput(e,CategoryDocId);
     }
-    p.appendChild(newItemInput);
-
+    p.appendChild(newEventTitleInput);
+     
     return p;
 
 }
 
-
-export function createToDoItemElement(item){
+export function createEventTitleElement(EventTitle){
     const li=document.createElement('li');
-            li.id=item.docId;
+            li.id=EventTitle.docId;
             li.innerHTML=`
-            <span class="d-block">${item.content}</span>
-            <input class="d-none" type="text" value="${item.content}">
+            <span class="d-block">${EventTitle.eventName}</span>
+            <input class="d-none" type="text" value="${EventTitle.eventName}">
+            <button class="btn btn-outline-success ">Add</button>
+            <button class="btn btn-outline-primary">Details</button>
             `;
+            li.querySelectorAll('button')[0].onclick=() => onClickEventDetails(EventTitle.docId,EventTitle.eventName);
+            li.querySelectorAll('button')[1].onclick=() => onClickEventUpdate(EventTitle.docId,EventTitle.eventName);
             li.onmouseover=onMouseOverItem;
             li.onmouseout=onMouseOutItem;
             const input=li.querySelector('input');
             input.onkeydown=onKeyDownUpdateItem;
             return li;
 }
+

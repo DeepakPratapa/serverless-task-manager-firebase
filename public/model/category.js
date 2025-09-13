@@ -1,9 +1,7 @@
 export class Category {
     constructor(data, docId) {
-        this.categoryId = data.categoryId;
-        this.titleId = data.titleId;
+        this.categoryName = data.categoryName;
         this.uid = data.uid;
-        this.content = data.content;
         this.timestamp = data.timestamp;
         this.docId = docId;
     }
@@ -14,9 +12,7 @@ export class Category {
 
     toFirestore() {
         return {
-            categoryId: this.categoryId,
-            titleId: this.titleId,
-            content: this.content,
+            categoryName: this.categoryName,
             uid: this.uid,
             timestamp: this.timestamp,
         };
