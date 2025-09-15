@@ -125,7 +125,7 @@ export async function signOutFirebase() {
 
 }
 
-
+// Validate Function
 export async function validatePassword(password) {
   // const minLength = 8;
   // const hasUpperCase = /[A-Z]/.test(password);
